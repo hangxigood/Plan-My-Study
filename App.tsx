@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
 import { openDatabase, fetchTasks, addTask, updateTask, deleteTask } from './database';
+import TaskItem from './src/components/taskItem';
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
@@ -38,6 +39,11 @@ const App = () => {
     await deleteTask(id);
     refreshTasks();
   };
+  
+  // const handleEditTask = async (id, title, description) => {
+  //   await updateTask(id, title, description);
+  //   refreshTasks();
+  // }
 
   const renderTask = ({ item }) => (
     <View style={styles.taskItem}>
@@ -48,6 +54,15 @@ const App = () => {
       </View>
     </View>
   );
+
+  // const renderTask = ({ item }) => (
+  //   <TaskItem
+  //     taskObj={item}
+  //     onCompletion={handleUpdateTask}
+  //     onDeletion={handleDeleteTask}
+  //     onEdit={handleEditTask}
+  //   />
+  // );
 
   return (
     <View style={styles.container}>
