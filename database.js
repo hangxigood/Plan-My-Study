@@ -73,7 +73,7 @@ export const addTask = async (title, description, date) => {
 export const updateTask = async (id, completed) => {
   try {
     await db.executeSql('UPDATE tasks SET completed = ? WHERE id = ?', [
-      completed ? 0 : 1,
+      completed ? 1 : 0,
       id,
     ]);
     console.log('Task updated successfully');
@@ -88,18 +88,5 @@ export const deleteTask = async id => {
     console.log('Task deleted successfully');
   } catch (error) {
     console.error('Error deleting task:', error);
-  }
-};
-
-export const editTask = async (id, title, date) => {
-  try {
-    await db.executeSql('UPDATE tasks SET title = ?, date = ? WHERE id = ?', [
-      title,
-      date,
-      id,
-    ]);
-    console.log('Task updated successfully');
-  } catch (error) {
-    console.error('Error updating task:', error);
   }
 };

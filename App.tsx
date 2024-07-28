@@ -2,9 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Button, FlatList, StyleSheet, SafeAreaView } from 'react-native';
 import { openDatabase, fetchTasks, addTask, updateTask, deleteTask } from './database';
-
-import TaskItem from './src/components/taskItem';
 import RNDateTimePicker from '@react-native-community/datetimepicker';
+import TaskItemList from './src/components/taskList';
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
@@ -49,11 +48,6 @@ const App = () => {
     refreshTasks();
   };
   
-  const handleEditTask = async (id, title, date) => {
-    await updateTask(id, title, date);
-    refreshTasks();
-  }
-
   const onChangeDate = (event: any, selectedDate?: Date) => {
     if (event.type === 'set') {
       const currentDate = selectedDate || date;
@@ -70,24 +64,6 @@ const App = () => {
     setShowDatePicker(true);
   };
 
-  // const renderTask = ({ item }) => (
-  //   <View style={styles.taskItem}>
-  //     <Text style={item.completed ? styles.completedTask : null}>{item.title}</Text>
-  //     <View style={styles.taskActions}>
-  //       <Button title={item.completed ? "Undo" : "Complete"} onPress={() => handleUpdateTask(item.id, item.completed)} />
-  //       <Button title="Delete" onPress={() => handleDeleteTask(item.id)} color="red" />
-  //     </View>
-  //   </View>
-  // );
-
-  const renderTask = ({ item }) => (
-    <TaskItem
-      taskObj={item}
-      onCompletion={handleUpdateTask}
-      onDeletion={handleDeleteTask}
-      onEdit={handleEditTask}
-    />
-  );
 
   return (
     <SafeAreaView style={styles.container}>
@@ -122,10 +98,10 @@ const App = () => {
         onChangeText={setDescription}
       />
       <Button title="Add Task" onPress={handleAddTask} />
-      <FlatList
-        data={tasks}
-        renderItem={renderTask}
-        keyExtractor={item => item.id.toString()}
+      <TaskItemList
+        tasks={tasks}
+        onCompletion={handleUpdateTask}
+        onDeletion={handleDeleteTask}
       />
     </SafeAreaView>
   );
