@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View, Button, TouchableOpacity } from "react-native";
 import styles from '../styles/styles';
 
-export default function TaskItem({ taskObj, onCompletion, onDeletion, onEdit, onSelect, selected }) {
+export default function TaskItem({ taskObj, onCompletion, onDeletion, onSelect, selected }) {
   let { completed, date, title, id } = taskObj;
 
   // Format date to a readable string
