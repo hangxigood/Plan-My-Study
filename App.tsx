@@ -1,13 +1,19 @@
 // App.js
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, FlatList, StyleSheet, SafeAreaView } from 'react-native';
 import { openDatabase, fetchTasks, addTask, updateTask, deleteTask } from './database';
+
 import TaskItem from './src/components/taskItem';
+import RNDateTimePicker from '@react-native-community/datetimepicker';
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+
+  const [date, setDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
 
   useEffect(() => {
     const setupDatabase = async () => {
@@ -19,14 +25,17 @@ const App = () => {
 
   const refreshTasks = async () => {
     const fetchedTasks = await fetchTasks();
+    console.log('Fetched tasks:', fetchedTasks);
     setTasks(fetchedTasks);
   };
 
   const handleAddTask = async () => {
     if (!title) return;
-    await addTask(title, description);
+    console.log('Adding task with date:', date);
+    await addTask(title, description, date);
     setTitle('');
     setDescription('');
+    setDate(new Date());
     refreshTasks();
   };
 
@@ -40,32 +49,66 @@ const App = () => {
     refreshTasks();
   };
   
-  // const handleEditTask = async (id, title, description) => {
-  //   await updateTask(id, title, description);
-  //   refreshTasks();
-  // }
+  const handleEditTask = async (id, title, date) => {
+    await updateTask(id, title, date);
+    refreshTasks();
+  }
 
-  const renderTask = ({ item }) => (
-    <View style={styles.taskItem}>
-      <Text style={item.completed ? styles.completedTask : null}>{item.title}</Text>
-      <View style={styles.taskActions}>
-        <Button title={item.completed ? "Undo" : "Complete"} onPress={() => handleUpdateTask(item.id, item.completed)} />
-        <Button title="Delete" onPress={() => handleDeleteTask(item.id)} color="red" />
-      </View>
-    </View>
-  );
+  const onChangeDate = (event: any, selectedDate?: Date) => {
+    if (event.type === 'set') {
+      const currentDate = selectedDate || date;
+      if (currentDate instanceof Date) {
+        setDate(currentDate);
+      }
+      setShowDatePicker(false); 
+    } else if (event.type === 'dismissed') {
+      setShowDatePicker(false); 
+    }
+  };
+
+  const handleTextInputFocus = () => {
+    setShowDatePicker(true);
+  };
 
   // const renderTask = ({ item }) => (
-  //   <TaskItem
-  //     taskObj={item}
-  //     onCompletion={handleUpdateTask}
-  //     onDeletion={handleDeleteTask}
-  //     onEdit={handleEditTask}
-  //   />
+  //   <View style={styles.taskItem}>
+  //     <Text style={item.completed ? styles.completedTask : null}>{item.title}</Text>
+  //     <View style={styles.taskActions}>
+  //       <Button title={item.completed ? "Undo" : "Complete"} onPress={() => handleUpdateTask(item.id, item.completed)} />
+  //       <Button title="Delete" onPress={() => handleDeleteTask(item.id)} color="red" />
+  //     </View>
+  //   </View>
   // );
 
+  const renderTask = ({ item }) => (
+    <TaskItem
+      taskObj={item}
+      onCompletion={handleUpdateTask}
+      onDeletion={handleDeleteTask}
+      onEdit={handleEditTask}
+    />
+  );
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      <Text></Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Selected date"
+        value={date.toLocaleDateString()}
+        onFocus={handleTextInputFocus}
+        editable={true}
+      />
+      <View style={styles.datePickerContainer}>
+        {showDatePicker && (
+          <RNDateTimePicker
+            value={date}
+            mode="date"
+            display="default"
+            onChange={onChangeDate}
+          />
+        )}
+      </View>
       <TextInput
         style={styles.input}
         placeholder="Task title"
@@ -84,7 +127,7 @@ const App = () => {
         renderItem={renderTask}
         keyExtractor={item => item.id.toString()}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -115,6 +158,13 @@ const styles = StyleSheet.create({
   completedTask: {
     textDecorationLine: 'line-through',
     color: '#888',
+  },
+  datePickerContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'white', 
   },
 });
 
