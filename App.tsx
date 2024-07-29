@@ -1,121 +1,42 @@
-// App.js
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet } from 'react-native';
-import { openDatabase, fetchTasks, addTask, updateTask, deleteTask } from './database';
-import TaskItem from './src/components/taskItem';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native'; // Importing the navigation container to manage the app's navigation state
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; // Importing bottom tab navigator for tab-based navigation
+import { SafeAreaProvider } from 'react-native-safe-area-context'; // Importing safe area provider to handle safe area insets for devices with notches or rounded corners
+import Home from './src/screens/Home'; // Importing the Home screen component
+import Calendar from './src/screens/Calendar'; // Importing the Calendar screen component
+import Settings from './src/screens/Settings'; // Importing the Settings screen component
+import { TaskProvider } from './src/contexts/TaskContext'; // Importing the TaskProvider to manage global task state
 
+// Creating a bottom tab navigator
+const Tab = createBottomTabNavigator();
+
+// Main App component
 const App = () => {
-  const [tasks, setTasks] = useState([]);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-
-  useEffect(() => {
-    const setupDatabase = async () => {
-      await openDatabase();
-      refreshTasks();
-    };
-    setupDatabase();
-  }, []);
-
-  const refreshTasks = async () => {
-    const fetchedTasks = await fetchTasks();
-    setTasks(fetchedTasks);
-  };
-
-  const handleAddTask = async () => {
-    if (!title) return;
-    await addTask(title, description);
-    setTitle('');
-    setDescription('');
-    refreshTasks();
-  };
-
-  const handleUpdateTask = async (id, completed) => {
-    await updateTask(id, completed);
-    refreshTasks();
-  };
-
-  const handleDeleteTask = async (id) => {
-    await deleteTask(id);
-    refreshTasks();
-  };
-  
-  // const handleEditTask = async (id, title, description) => {
-  //   await updateTask(id, title, description);
-  //   refreshTasks();
-  // }
-
-  const renderTask = ({ item }) => (
-    <View style={styles.taskItem}>
-      <Text style={item.completed ? styles.completedTask : null}>{item.title}</Text>
-      <View style={styles.taskActions}>
-        <Button title={item.completed ? "Undo" : "Complete"} onPress={() => handleUpdateTask(item.id, item.completed)} />
-        <Button title="Delete" onPress={() => handleDeleteTask(item.id)} color="red" />
-      </View>
-    </View>
-  );
-
-  // const renderTask = ({ item }) => (
-  //   <TaskItem
-  //     taskObj={item}
-  //     onCompletion={handleUpdateTask}
-  //     onDeletion={handleDeleteTask}
-  //     onEdit={handleEditTask}
-  //   />
-  // );
-
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Task title"
-        value={title}
-        onChangeText={setTitle}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Task description"
-        value={description}
-        onChangeText={setDescription}
-      />
-      <Button title="Add Task" onPress={handleAddTask} />
-      <FlatList
-        data={tasks}
-        renderItem={renderTask}
-        keyExtractor={item => item.id.toString()}
-      />
-    </View>
+    // Wrapping the app with TaskProvider to provide global task state
+    <TaskProvider>
+      {/* SafeAreaProvider ensures that the content avoids the notches, status bars, etc. */}
+      <SafeAreaProvider>
+        {/* NavigationContainer is the root component for navigation */}
+        <NavigationContainer>
+          {/* Configuring the bottom tab navigator */}
+          <Tab.Navigator
+            screenOptions={{
+              // Hiding the header for all screens
+              headerShown: false,
+            }}
+            // Setting the initial screen to be displayed when the app launches
+            initialRouteName="Home"
+          >
+            {/* Defining the screens in the bottom tab navigator */}
+            <Tab.Screen name="Home" component={Home} /> 
+            <Tab.Screen name="Calendar" component={Calendar} />
+            <Tab.Screen name="Settings" component={Settings} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </TaskProvider>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    marginTop: 40,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  taskItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  taskActions: {
-    flexDirection: 'row',
-  },
-  completedTask: {
-    textDecorationLine: 'line-through',
-    color: '#888',
-  },
-});
-
-export default App;
+export default App; // Exporting the App component as the default export

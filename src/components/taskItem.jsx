@@ -1,30 +1,21 @@
-import { Button, SafeAreaView, Text, View } from "react-native";
-import styles from '../styles/styles';
+import { View, Text, TouchableOpacity } from 'react-native';
 
-const TaskItem = ({ taskObj, onCompletion, onDeletion, onEdit }) => {
-  let {completed, date, title, description} = taskObj;
+// TaskItem component: Renders an individual task with options to toggle completion and delete the task
+const TaskItem = ({ task, onToggleComplete, onDelete }) => (
+  <View className="flex-row justify-between items-center bg-white p-4 mb-2">
+    {/* TouchableOpacity to handle task completion toggle */}
+    <TouchableOpacity onPress={() => onToggleComplete(task.id)} className="flex-1">
+      {/* Display the task title with conditional styling based on its completion status */}
+      <Text className={`text-lg ${task.completed ? 'line-through text-gray-500' : 'text-black'}`}>
+        {task.title}
+      </Text>
+    </TouchableOpacity>
 
-  return (
-    <SafeAreaView>
-      <View>
-        {/* date, title, completed status */}
-        <Text>{date}</Text>
-        <Text>{title}</Text>
-        <Text style={completed ? styles.completedTask : styles.incomplete}>
-          {completed ? 'Completed' : 'Incomplete'}
-        </Text>
-      </View>
-      <View>
-        {/* edit the completed status & delete the current task */}
-        <Button
-          title={completed ? 'Undo' : 'Complete'}
-          onPress={() => onCompletion(id)}
-        />
-        <Button title="Delete" color="red" onPress={() => onDeletion(id)} />
-        <Button title="Edit" onPress={() => onEdit(id)} />
-      </View>
-    </SafeAreaView>
-  );
-};
+    {/* TouchableOpacity to handle task deletion */}
+    <TouchableOpacity onPress={() => onDelete(task.id)} className="ml-4">
+      <Text className="text-red-500">Delete</Text>
+    </TouchableOpacity>
+  </View>
+);
 
 export default TaskItem;
