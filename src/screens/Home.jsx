@@ -82,3 +82,89 @@ const Home = () => {
 };
 
 export default Home;
+
+// Kai 0729 remember (npm install react-native-gesture-handler)
+
+// import React, { useState } from 'react';
+// import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+// import { useTaskContext } from '../contexts/TaskContext';
+// import TaskList from '../components/TaskList';
+// import { SafeAreaProvider } from 'react-native-safe-area-context';
+// import { GestureHandlerRootView } from 'react-native-gesture-handler';
+// import dayjs from 'dayjs';
+
+// const Home = () => {
+//   const { tasks } = useTaskContext();
+//   const [expandedSection, setExpandedSection] = useState(null);
+
+//   // Function to group tasks by their due date
+//   const groupTasksByDate = (tasks) => {
+//     const grouped = {};
+//     tasks.forEach(task => {
+//       if (!grouped[task.dueDate]) {
+//         grouped[task.dueDate] = [];
+//       }
+//       grouped[task.dueDate].push(task);
+//     });
+//     return grouped;
+//   };
+
+//   // Group the tasks by date
+//   const groupedTasks = groupTasksByDate(tasks);
+
+//   // Ensure there's an entry for today, even if it's empty
+//   const today = dayjs().format('YYYY-MM-DD');
+//   if (!groupedTasks[today]) {
+//     groupedTasks[today] = [];
+//   }
+
+//   // Create an array of sections for the FlatList
+//   const taskSections = Object.entries(groupedTasks).map(([date, dateTasks]) => ({
+//     title: date,
+//     data: dateTasks
+//   }));
+
+//   // Toggle the expanded state for a section
+//   const toggleSection = (title) => {
+//     setExpandedSection(prev => (prev === title ? null : title));
+//   };
+
+//   // Render each section (date) in the FlatList
+//   const renderSection = ({ item }) => (
+//     <View className="mb-4">
+//       {/* TouchableOpacity to handle section expansion */}
+//       <TouchableOpacity
+//         onPress={() => toggleSection(item.title)}
+//         className="p-2 bg-blue-100"
+//       >
+//         <Text className="text-lg font-bold text-blue-900">{item.title}</Text>
+//       </TouchableOpacity>
+      
+//       {/* Conditionally render TaskList based on expanded state */}
+//       {expandedSection === item.title && (
+//         <TaskList
+//           tasks={item.data}
+//           selectedDate={item.title}
+//         />
+//       )}
+//     </View>
+//   );
+
+//   return (
+//     <GestureHandlerRootView style={{ flex: 1 }}>
+//       <SafeAreaProvider style={{ flex: 1 }}>
+//         <View className="flex-1">
+//           <Text className="text-2xl font-bold text-center p-4 text-blue-900">My Tasks</Text>
+//           <FlatList
+//             data={taskSections}
+//             keyExtractor={(item) => item.title}
+//             renderItem={renderSection}
+//           />
+//         </View>
+//       </SafeAreaProvider>
+//     </GestureHandlerRootView>
+//   );
+// };
+
+// export default Home;
+
