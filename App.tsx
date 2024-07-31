@@ -1,151 +1,42 @@
-// App.js
-import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, Button, FlatList, StyleSheet, SafeAreaView } from 'react-native';
-import { openDatabase, fetchTasks, addTask, updateTask, deleteTask } from './database';
-import RNDateTimePicker from '@react-native-community/datetimepicker';
-import TaskItemList from './src/components/taskList';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native'; // Importing the navigation container to manage the app's navigation state
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'; // Importing bottom tab navigator for tab-based navigation
+import { SafeAreaProvider } from 'react-native-safe-area-context'; // Importing safe area provider to handle safe area insets for devices with notches or rounded corners
+import Home from './src/screens/Home'; // Importing the Home screen component
+import Calendar from './src/screens/Calendar'; // Importing the Calendar screen component
+import Settings from './src/screens/Settings'; // Importing the Settings screen component
+import { TaskProvider } from './src/contexts/TaskContext'; // Importing the TaskProvider to manage global task state
 
 // Creating a bottom tab navigator
 const Tab = createBottomTabNavigator();
 
 // Main App component
 const App = () => {
-  const [tasks, setTasks] = useState([]);
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-
-  const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
-
-  useEffect(() => {
-    const setupDatabase = async () => {
-      await openDatabase();
-      refreshTasks();
-    };
-    setupDatabase();
-  }, []);
-
-  const refreshTasks = async () => {
-    const fetchedTasks = await fetchTasks();
-    console.log('Fetched tasks:', fetchedTasks);
-    setTasks(fetchedTasks);
-  };
-
-  const handleAddTask = async () => {
-    if (!title) return;
-    console.log('Adding task with date:', date);
-    await addTask(title, description, date);
-    setTitle('');
-    setDescription('');
-    setDate(new Date());
-    refreshTasks();
-  };
-
-  const handleUpdateTask = async (id, completed) => {
-    await updateTask(id, completed);
-    refreshTasks();
-  };
-
-  const handleDeleteTask = async (id) => {
-    await deleteTask(id);
-    refreshTasks();
-  };
-  
-  const onChangeDate = (event: any, selectedDate?: Date) => {
-    if (event.type === 'set') {
-      const currentDate = selectedDate || date;
-      if (currentDate instanceof Date) {
-        setDate(currentDate);
-      }
-      setShowDatePicker(false); 
-    } else if (event.type === 'dismissed') {
-      setShowDatePicker(false); 
-    }
-  };
-
-  const handleTextInputFocus = () => {
-    setShowDatePicker(true);
-  };
-
-
   return (
-    <SafeAreaView style={styles.container}>
-      <Text></Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Selected date"
-        value={date.toLocaleDateString()}
-        onFocus={handleTextInputFocus}
-        editable={true}
-      />
-      <View style={styles.datePickerContainer}>
-        {showDatePicker && (
-          <RNDateTimePicker
-            value={date}
-            mode="date"
-            display="default"
-            onChange={onChangeDate}
-          />
-        )}
-      </View>
-      <TextInput
-        style={styles.input}
-        placeholder="Task title"
-        value={title}
-        onChangeText={setTitle}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Task description"
-        value={description}
-        onChangeText={setDescription}
-      />
-      <Button title="Add Task" onPress={handleAddTask} />
-      <TaskItemList
-        tasks={tasks}
-        onCompletion={handleUpdateTask}
-        onDeletion={handleDeleteTask}
-      />
-    </SafeAreaView>
+    // Wrapping the app with TaskProvider to provide global task state
+    <TaskProvider>
+      {/* SafeAreaProvider ensures that the content avoids the notches, status bars, etc. */}
+      <SafeAreaProvider>
+        {/* NavigationContainer is the root component for navigation */}
+        <NavigationContainer>
+          {/* Configuring the bottom tab navigator */}
+          <Tab.Navigator
+            screenOptions={{
+              // Hiding the header for all screens
+              headerShown: false,
+            }}
+            // Setting the initial screen to be displayed when the app launches
+            initialRouteName="Home"
+          >
+            {/* Defining the screens in the bottom tab navigator */}
+            <Tab.Screen name="Home" component={Home} /> 
+            <Tab.Screen name="Calendar" component={Calendar} />
+            <Tab.Screen name="Settings" component={Settings} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </TaskProvider>
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    marginTop: 40,
-  },
-  input: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  taskItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  taskActions: {
-    flexDirection: 'row',
-  },
-  completedTask: {
-    textDecorationLine: 'line-through',
-    color: '#888',
-  },
-  datePickerContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'white', 
-  },
-});
-
-export default App;
+export default App; // Exporting the App component as the default export
