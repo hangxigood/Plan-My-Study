@@ -5,6 +5,10 @@ import { openDatabase, fetchTasks, addTask, updateTask, deleteTask } from './dat
 import RNDateTimePicker from '@react-native-community/datetimepicker';
 import TaskItemList from './src/components/taskList';
 
+// Creating a bottom tab navigator
+const Tab = createBottomTabNavigator();
+
+// Main App component
 const App = () => {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState('');
