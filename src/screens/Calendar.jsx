@@ -1,50 +1,42 @@
-// screens/Calendar.jsx
 import React, { useState, useEffect } from 'react';
 import { Text } from 'react-native';
 import { Calendar as RNCalendar } from 'react-native-calendars';
 import { useTaskContext } from '../contexts/TaskContext';
 import TaskList from '../components/TaskList';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
-// Calendar component: Screen displaying a calendar view with task markers and task list
 const Calendar = () => {
-  const { tasks } = useTaskContext(); // Use the TaskContext to access tasks
-  const [selectedDate, setSelectedDate] = useState(''); // State to store the currently selected date
-  const [markedDates, setMarkedDates] = useState({}); // State to store dates with task markers
+  const { tasks } = useTaskContext();
+  const { darkMode } = useDarkMode();
+  const [selectedDate, setSelectedDate] = useState('');
+  const [markedDates, setMarkedDates] = useState({});
 
-  // useEffect to mark dates with tasks whenever the tasks list changes
   useEffect(() => {
     const marked = {};
     tasks.forEach(task => {
-      // Check if the date already has a marker, if so, add a new dot
       if (marked[task.dueDate]) {
         marked[task.dueDate].dots.push({ color: 'blue' });
       } else {
-        // If no marker exists for the date, create a new marker with a blue dot
         marked[task.dueDate] = { dots: [{ color: 'blue' }] };
       }
     });
-    setMarkedDates(marked); // Update the markedDates state
-  }, [tasks]); // Dependency array to re-run the effect when tasks change
+    setMarkedDates(marked);
+  }, [tasks]);
 
-  // Function to handle day press events on the calendar
   const handleDayPress = (day) => {
-    setSelectedDate(day.dateString); // Set the selected date state to the pressed date
+    setSelectedDate(day.dateString);
   };
 
-  // Filter tasks to get tasks for the currently selected date
   const tasksForSelectedDate = tasks.filter(task => task.dueDate === selectedDate);
 
   return (
-    <SafeAreaProvider className="flex-1 bg-gray-100">
-      {/* Header text */}
-      <Text className="text-2xl font-bold text-center py-4 text-blue-600">Calendar</Text>
-      
-      {/* Calendar component to display dates and handle date selection */}
+    <SafeAreaProvider className={`flex-1 ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+      <Text className={`text-2xl font-bold text-center py-4 ${darkMode ? 'text-white' : 'text-blue-600'}`}>Calendar</Text>
       <RNCalendar
-        onDayPress={handleDayPress} // Function to handle day press
+        onDayPress={handleDayPress}
         markedDates={{
-          ...markedDates, // Spread existing marked dates
+          ...markedDates,
           [selectedDate]: {
             selected: true,
             disableTouchEvent: true,
@@ -52,10 +44,13 @@ const Calendar = () => {
             selectedTextColor: 'white',
           }
         }}
-        markingType={'multi-dot'} // Type of marking to support multiple dots
+        theme={{
+          calendarBackground: darkMode ? 'black' : 'white',
+          dayTextColor: darkMode ? 'white' : 'black',
+          textDisabledColor: darkMode ? 'gray' : '#d9e1e8',
+        }}
+        markingType={'multi-dot'}
       />
-
-      {/* TaskList component to display tasks for the selected date */}
       <TaskList 
         tasks={tasksForSelectedDate} 
         selectedDate={selectedDate} 
