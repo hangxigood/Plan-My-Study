@@ -46,6 +46,7 @@ export const initDatabase = async () => {
   )`;
 
   try {
+    await db.executeSql('DROP TABLE IF EXISTS tasks');
     await db.executeSql(query);
     console.log("Table created successfully");
   } catch (error) {
@@ -114,7 +115,7 @@ export const fetchAllTasks = async () => {
 // Function to reset the tasks table (for testing purposes)
 export const resetTable = async () => {
   try {
-    await db.executeSql('DELETE FROM tasks');
+    await db.executeSql('DROP TABLE IF EXISTS tasks');
     console.log("Tasks deleted successfully");
     await initDatabase(); // Re-initialize the database schema
   } catch (error) {
