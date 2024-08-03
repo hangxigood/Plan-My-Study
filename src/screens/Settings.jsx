@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // // screens/Settings.jsx
 // import React, { useState } from 'react';
 // import { View, Text, Switch, TouchableOpacity, ScrollView } from 'react-native';
@@ -59,6 +60,8 @@
 
 // export default Settings;
 
+=======
+>>>>>>> ca71f1c91adba58c8bfc82388ee8776b558adde3
 // Settings.jsx
 import React, { useState } from 'react';
 import { View, Text, Switch, TouchableOpacity, ScrollView } from 'react-native';

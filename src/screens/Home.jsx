@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // import React, { useState } from 'react';
 // import { View, Text, FlatList } from 'react-native';
 // import { useTaskContext } from '../contexts/TaskContext';
@@ -58,6 +59,8 @@
 // };
 
 
+=======
+>>>>>>> ca71f1c91adba58c8bfc82388ee8776b558adde3
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { useTaskContext } from '../contexts/TaskContext';
