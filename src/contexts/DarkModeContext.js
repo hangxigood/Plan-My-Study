@@ -5,9 +5,10 @@ const DarkModeContext = createContext();
 
 export const DarkModeProvider = ({ children }) => {
   const [darkMode, setDarkMode] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
 
   return (
-    <DarkModeContext.Provider value={{ darkMode, setDarkMode }}>
+    <DarkModeContext.Provider value={{ darkMode, setDarkMode, notificationsEnabled, setNotificationsEnabled }}>
       {children}
     </DarkModeContext.Provider>
   );
