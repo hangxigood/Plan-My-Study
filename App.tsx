@@ -11,6 +11,7 @@ import { DarkModeProvider, useDarkMode } from './src/contexts/DarkModeContext';
 
 const Tab = createBottomTabNavigator();
 
+
 // Create a new component that uses the useDarkMode hook
 const AppContent = () => {
   const { darkMode } = useDarkMode();
