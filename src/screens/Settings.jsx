@@ -30,7 +30,7 @@ const Settings = () => {
           </View>
 
           <View className="flex-row justify-between items-center mb-4">
-            <Text className={`text-lg ${darkMode ? 'text-white' : 'text-black'}`}>Dark Mode</Text>
+            <Text className={`text-lg ${darkMode ? 'text-white' : 'text-black'}`}>Dark </Text>
             <Switch
               value={darkMode}
               onValueChange={setDarkMode}
