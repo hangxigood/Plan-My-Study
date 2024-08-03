@@ -1,4 +1,4 @@
-// screens/Settings.jsx
+// Settings.jsx
 import React, { useState } from 'react';
 import { View, Text, Switch, TouchableOpacity, ScrollView } from 'react-native';
 import { useTaskContext } from '../contexts/TaskContext';
@@ -7,8 +7,7 @@ import { useDarkMode } from '../contexts/DarkModeContext';
 
 const Settings = () => {
   const { resetTasks } = useTaskContext();
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const { darkMode, setDarkMode } = useDarkMode(); // Changed this line
+  const { darkMode, setDarkMode, notificationsEnabled, setNotificationsEnabled } = useDarkMode(); // 추가된 부분
 
   const handleResetData = async () => {
     await resetTasks();
@@ -30,7 +29,7 @@ const Settings = () => {
           </View>
 
           <View className="flex-row justify-between items-center mb-4">
-            <Text className={`text-lg ${darkMode ? 'text-white' : 'text-black'}`}>Dark </Text>
+            <Text className={`text-lg ${darkMode ? 'text-white' : 'text-black'}`}>Dark Mode</Text>
             <Switch
               value={darkMode}
               onValueChange={setDarkMode}
