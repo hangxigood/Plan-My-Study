@@ -4,6 +4,7 @@ import { useTaskContext } from '../contexts/TaskContext';
 import TaskItem from './TaskItem';
 import AddTaskModal from './AddTaskModal';
 import dayjs from 'dayjs'; // Ensure you have dayjs installed
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const TaskList = ({ selectedDate }) => {
   const { tasks, updateTaskStatus, removeTask } = useTaskContext();
@@ -34,7 +35,7 @@ const TaskList = ({ selectedDate }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, paddingBottom: 55 }}>
       <ScrollView>
         {filteredTasks.length > 0 ? (
           filteredTasks.map(task => (
@@ -62,7 +63,7 @@ const TaskList = ({ selectedDate }) => {
         onClose={() => setAddModalVisible(false)}
         defaultDate={dateToUse}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 

@@ -8,9 +8,9 @@ import Calendar from './src/screens/Calendar';
 import Settings from './src/screens/Settings';
 import { TaskProvider } from './src/contexts/TaskContext';
 import { DarkModeProvider, useDarkMode } from './src/contexts/DarkModeContext';
+import BottomNavigation from './src/components/BottomNavigation';
 
 const Tab = createBottomTabNavigator();
-
 
 // Create a new component that uses the useDarkMode hook
 const AppContent = () => {
@@ -24,6 +24,7 @@ const AppContent = () => {
             headerShown: false,
           }}
           initialRouteName="Home"
+          tabBar={(props) => <BottomNavigation {...props} />}
         >
           <Tab.Screen name="Home" component={Home} />
           <Tab.Screen name="Calendar" component={Calendar} />
