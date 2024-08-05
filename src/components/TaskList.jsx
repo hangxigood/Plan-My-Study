@@ -3,12 +3,14 @@ import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { useTaskContext } from '../contexts/TaskContext';
 import TaskItem from './TaskItem';
 import AddTaskModal from './AddTaskModal';
-import dayjs from 'dayjs'; // Ensure you have dayjs installed
+import dayjs from 'dayjs';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useDarkMode } from '../contexts/DarkModeContext';
 
 const TaskList = ({ selectedDate }) => {
   const { tasks, updateTaskStatus, removeTask } = useTaskContext();
   const [isAddModalVisible, setAddModalVisible] = useState(false);
+  const { darkMode } = useDarkMode();
 
   // Determine the date to use (either selectedDate or today's date)
   const dateToUse = selectedDate || dayjs().format('YYYY-MM-DD');
@@ -35,7 +37,7 @@ const TaskList = ({ selectedDate }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, paddingBottom: 55 }}>
+    <SafeAreaView style={{ flex: 1, paddingBottom: 55, backgroundColor: darkMode ? '#1f2937' : '#f3f4f6' }}>
       <ScrollView>
         {filteredTasks.length > 0 ? (
           filteredTasks.map(task => (
@@ -44,24 +46,32 @@ const TaskList = ({ selectedDate }) => {
               task={task}
               onToggleComplete={handleToggleComplete}
               onDelete={handleDelete}
+              darkMode={darkMode}  // Pass darkMode prop to TaskItem
             />
           ))
         ) : (
-          <Text style={{ padding: 16}}>No tasks for this date</Text>
+          <Text style={{ padding: 16, color: darkMode ? '#ffffff' : '#000000' }}>No tasks for this date</Text>
         )}
       </ScrollView>
 
       <TouchableOpacity
-        style={{ backgroundColor: 'white', padding: 16, marginVertical: 8 }}
+        style={{
+          backgroundColor: darkMode ? '#374151' : 'white',
+          padding: 16,
+          marginVertical: 8
+        }}
         onPress={onAddTaskPress}
       >
-        <Text style={{ fontSize: 18, color: 'gray' }}>New task for {dateToUse}</Text>
+        <Text style={{ fontSize: 18, color: darkMode ? '#ffffff' : 'gray' }}>
+          New task for {dateToUse}
+        </Text>
       </TouchableOpacity>
 
       <AddTaskModal
         isVisible={isAddModalVisible}
         onClose={() => setAddModalVisible(false)}
         defaultDate={dateToUse}
+        darkMode={darkMode}  // Pass darkMode prop to AddTaskModal
       />
     </SafeAreaView>
   );

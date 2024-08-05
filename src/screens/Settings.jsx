@@ -7,7 +7,7 @@ import { useDarkMode } from '../contexts/DarkModeContext';
 
 const Settings = () => {
   const { resetTasks } = useTaskContext();
-  const { darkMode, setDarkMode, notificationsEnabled, setNotificationsEnabled } = useDarkMode(); // 추가된 부분
+  const { darkMode, setDarkMode, notificationsEnabled, setNotificationsEnabled } = useDarkMode(); 
 
   const handleResetData = async () => {
     await resetTasks();
