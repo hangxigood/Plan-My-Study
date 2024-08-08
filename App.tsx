@@ -19,18 +19,23 @@ const AppContent = () => {
   return (
     <SafeAreaProvider>
       <NavigationContainer theme={darkMode ? DarkTheme : DefaultTheme}>
-        <Tab.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
-          initialRouteName="Home"
-          tabBar={(props) => <BottomNavigation {...props} />}
-        >
-          <Tab.Screen name="Home" component={Home} />
-          <Tab.Screen name="Calendar" component={Calendar} />
-          <Tab.Screen name="Settings" component={Settings} />
-        </Tab.Navigator>
-      </NavigationContainer>
+      <Tab.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName="Home"
+        tabBar={(props) => (
+          <BottomNavigation
+            {...props}
+            activeScreen={props.state.routeNames[props.state.index]}
+          />
+        )}
+      >
+        <Tab.Screen name="Home" component={Home} />
+        <Tab.Screen name="Calendar" component={Calendar} />
+        <Tab.Screen name="Settings" component={Settings} />
+      </Tab.Navigator>
+      </NavigationContainer>  
     </SafeAreaProvider>
   );
 };
