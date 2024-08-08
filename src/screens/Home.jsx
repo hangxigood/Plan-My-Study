@@ -34,7 +34,7 @@ const Home = () => {
     data: dateTasks
   }));
 
-  //Check task
+  // Check task
   const getAlertMessage = () => {
     const totalTasks = tasks.length;
     if (totalTasks === 0) {
@@ -52,11 +52,14 @@ const Home = () => {
 
   useEffect(() => {
     if (notificationsEnabled) {
-      setShowAlert(true);  // Always show alert if notifications are enabled
+      setShowAlert(true); // Always show alert if notifications are enabled
     } else {
       setShowAlert(false);
     }
   }, [tasks, notificationsEnabled]);
+
+  const alertBackgroundColor = darkMode ? '#424242' : '#c5cae9'; // Background color for alert
+  const alertTextColor = darkMode ? '#fff' : '#000'; // Text color for alert
 
   return (
     <SafeAreaProvider className={`flex-1 ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
@@ -64,13 +67,13 @@ const Home = () => {
         <Text className={`text-2xl font-bold text-center p-4 ${darkMode ? 'text-white' : 'text-blue-600'}`}>My Tasks</Text>
 
         {showAlert && (
-          <View className={`bg-yellow-100 border border-yellow-400 p-4 rounded mb-4 mx-4 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
-            <View className="flex-row justify-between items-center">
-              <Text className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-black'}`}>
+          <View style={{ backgroundColor: alertBackgroundColor, borderColor: alertTextColor, borderWidth: 1, padding: 16, borderRadius: 8, marginHorizontal: 16, marginBottom: 16 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontSize: 18, fontWeight: '600', color: alertTextColor }}>
                 {getAlertMessage()}
               </Text>
               <TouchableOpacity onPress={handleAlertClose}>
-                <Text className={`text-lg font-semibold ${darkMode ? 'text-white' : 'text-black'}`}>X</Text>
+                <Text style={{ fontSize: 18, fontWeight: '600', color: alertTextColor }}>X</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -80,8 +83,10 @@ const Home = () => {
           data={taskSections}
           keyExtractor={(item) => item.title}
           renderItem={({ item }) => (
-            <View className="mb-4">
-              <Text className={`text-lg font-bold p-2 ${darkMode ? 'bg-gray-700 text-white' : 'bg-blue-100 text-blue-900'}`}>{item.title}</Text>
+            <View style={{ marginBottom: 16 }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', padding: 8, backgroundColor: darkMode ? '#424242' : '#e3f2fd', color: darkMode ? '#fff' : '#000' }}>
+                {item.title}
+              </Text>
               <TaskList
                 tasks={item.data}
                 selectedDate={item.title}
