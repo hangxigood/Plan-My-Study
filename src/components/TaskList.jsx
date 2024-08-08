@@ -54,18 +54,23 @@ const TaskList = ({ selectedDate }) => {
         )}
       </ScrollView>
 
-      <TouchableOpacity
-        style={{
-          backgroundColor: darkMode ? '#374151' : 'white',
-          padding: 16,
-          marginVertical: 8
-        }}
-        onPress={onAddTaskPress}
-      >
-        <Text style={{ fontSize: 18, color: darkMode ? '#ffffff' : 'gray' }}>
-          New task for {dateToUse}
-        </Text>
-      </TouchableOpacity>
+      <TouchableOpacity onPress={onAddTaskPress}>
+  <View
+    style={{
+      backgroundColor: darkMode ? '#374151' : 'white',
+      padding: 16,
+      marginVertical: 8,
+      borderRadius: 80, 
+      alignItems: 'center',
+      justifyContent: 'center'
+    }}
+  >
+    <Text style={{ fontSize: 18, color: darkMode ? '#ffffff' : 'gray' }}>
+      Add New task for {dateToUse}
+    </Text>
+  </View>
+</TouchableOpacity>
+
 
       <AddTaskModal
         isVisible={isAddModalVisible}

@@ -61,7 +61,7 @@ const Home = () => {
   return (
     <SafeAreaProvider className={`flex-1 ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
       <View className="flex-1">
-        <Text className={`text-2xl font-bold text-center p-4 ${darkMode ? 'text-white' : 'text-blue-900'}`}>My Tasks</Text>
+        <Text className={`text-2xl font-bold text-center p-4 ${darkMode ? 'text-white' : 'text-blue-600'}`}>My Tasks</Text>
 
         {showAlert && (
           <View className={`bg-yellow-100 border border-yellow-400 p-4 rounded mb-4 mx-4 ${darkMode ? 'bg-gray-800' : 'bg-white'}`}>
